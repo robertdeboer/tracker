@@ -25,11 +25,14 @@ for use the project.
 
 ## Local Setup
 
-Clone the project from `git clone git@gitlab.brandlabs.net:intel/applications/hours-tracker/eis-group.git`
+Clone the project from `git clone https://github.com/robertdeboer/tracker.git`
 
 Install dependencies using both composer and npm
 `composer install`
 `npm ci`
+
+Build the UI
+`npm run build`
 
 Create a local environment via docker by running
 `./vendor/bin/sail up -d`
