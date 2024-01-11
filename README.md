@@ -25,31 +25,44 @@ for use the project.
 
 ## Local Setup
 
-Clone the project from `git clone https://github.com/robertdeboer/tracker.git`
+1. Clone the project
+```bash
+git clone https://github.com/robertdeboer/tracker.git
+````
+2. Install dependencies
+```bash
+composer install
+```
+```bash
+npm ci
+````
+3. Initialize the application
+```bash 
+cp .env.example .env
+```
+```bash
+php artisan key:generate
+```
+4. Build the UI
+```bash
+npm run build
+```
+5. Create the local environment via docker
+```bash
+./vendor/bin/sail up -d
+```
+6. Initialize the database
+```bash
+./vendor/bin/sail artisan migrate --force
+```
+7. Initialize the system permissions
+```bash
+./vendor/bin/sail artisan app:permissions
+```
+You may now access the application at `http://localhost`
 
-Install dependencies using both composer and npm
-`composer install`
-`npm ci`
-
-Initialize the application
-`cp .env.example .env`
-`php artisan key:generate`
-
-Build the UI
-`npm run build`
-
-Create a local environment via docker by running
-`./vendor/bin/sail up -d`
-
-Initialize the database
-`./vendor/bin/sail artisan migrate --force`
-
-Initialize the system permissions
-`./vendor/bin/sail artisan app:permissions`
-
-Access the application at `http://localhost`
-
-For a fresh install, register a user, and they will automatically be
+### Notes
+After a fresh install, you will have to register the first user. They will automatically be
 registered as a Super Admin. Any other users may be added manually via
 the `System` -> `Users` table.
 
