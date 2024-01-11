@@ -42,7 +42,7 @@ Create a local environment via docker by running
 `./vendor/bin/sail up -d`
 
 Initialize the database
-`./vendor/bin/sail artisan migrate`
+`./vendor/bin/sail artisan migrate --force`
 
 Initialize the system permissions
 `./vendor/bin/sail artisan app:permissions`
