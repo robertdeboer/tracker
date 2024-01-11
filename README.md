@@ -31,6 +31,10 @@ Install dependencies using both composer and npm
 `composer install`
 `npm ci`
 
+Initialize the application
+`cp .env.example .env`
+`php artisan key:generate`
+
 Build the UI
 `npm run build`
 
