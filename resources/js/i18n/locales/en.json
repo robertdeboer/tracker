@@ -1,0 +1,110 @@
+{
+  "user": {
+    "roles": {
+      "Customer": "Customer",
+      "Project Manager": "Project Manager",
+      "Engineer": "Engineer",
+      "Admin": "Admin",
+      "Super Admin": "Super Admin"
+    }
+  },
+  "navigation":
+  {
+    "dashboard": "Dashboard",
+    "projects": "Projects",
+    "orders": "Orders",
+    "system": "System",
+    "users": "Users"
+  },
+  "page": {
+    "dashboard": {
+      "title": "Dashboard",
+      "heading": "Your Projects",
+      "buttons": {
+        "create": "Create Project"
+      }
+    },
+    "project": {
+      "buttons": {
+        "summary": {
+          "main": "Summary",
+          "view": "View",
+          "email": "Email"
+        },
+        "update": "Update Project",
+        "log": "Export Log"
+      },
+      "summary": {
+        "used": "Hours Used",
+        "ordered": "Hours Ordered"
+      }
+    },
+    "work_item": {
+      "button": {
+        "create": "Add Work Item",
+        "edit": "Edit",
+        "delete": "Delete",
+        "time_entries": "Time Entries"
+      }
+    },
+    "time": {
+      "button": {
+        "create": "Add Time Entry",
+        "edit": "Edit",
+        "delete": "Delete",
+        "rebate": "Rebate"
+      }
+    },
+    "order": {
+      "button": {
+        "create": "Add Order",
+        "edit": "Edit",
+        "delete": "Delete"
+      }
+    },
+    "user": {
+      "button":{
+        "assign": "Assign User",
+        "create": "Add User",
+        "delete": "Delete",
+        "edit": "Edit",
+        "remove": "Remove"
+      }
+    }
+  },
+  "form": {
+    "project": {
+      "name": "Name",
+      "active": "Is Active",
+      "create_order": "Create Order"
+    },
+    "order": {
+      "number": "Reference Number",
+      "hours": "Hours",
+      "email": "Email Contact",
+      "date": "Purchase Date",
+      "project": "Project"
+    },
+    "work_item": {
+      "name": "Name",
+      "is_open": "Is Open",
+      "start": "Start Date",
+      "end": "End Date",
+      "owner": "Owner",
+      "ticket": "IPS Data",
+      "ticket_id": "ID",
+      "ticket_url": "URL"
+    },
+    "time_entry": {
+      "hours": "Hours",
+      "date": "Date",
+      "note": "Note"
+    },
+    "user": {
+      "first_name": "First Name",
+      "last_name": "Last Name",
+      "email": "Email",
+      "role": "User Role"
+    }
+  }
+}

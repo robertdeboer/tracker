@@ -1,0 +1,21 @@
+"IPS Data"
+type IpsData {
+    "The ips ticket id."
+    id: String
+    "The ips ticket url."
+    url: String
+}
+"Input for creating IPS Data."
+input IpsDataCreateInput {
+    "The ips ticket id."
+    id: String
+    "The ips ticket url."
+    url: String
+}
+"Input for updating IPS Data."
+input IpsDataUpdateInput {
+    "The ips ticket id."
+    id: String
+    "The ips ticket url."
+    url: String
+}

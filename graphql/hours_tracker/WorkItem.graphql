@@ -1,0 +1,105 @@
+"A work item."
+type WorkItem {
+    "The internal work item id."
+    id: ID!
+    "The work item project."
+    project: Project! @belongsTo
+    "The work item owner."
+    owner: User! @belongsTo
+    "The work item name."
+    name: String!
+    "Is the work item open."
+    is_open: Boolean!
+    "The start date/time of the work order."
+    start_date: DateTime!
+    "The end date/time of the work order."
+    end_date: DateTime
+    "Ticket data for the work order."
+    ticket_data: IpsData!
+    "Additional users assigned to the work item."
+    users: [User] @belongsToMany(defaultCount: 10)
+    "Time entries for the work item."
+    time_entries(where: _ @whereConditions(columns: ["date"])): [TimeEntry] @hasMany(defaultCount: 10)
+    "Number of hours recorded to this work item."
+    hours: Float @aggregate(relation: "time_entries", column: "hours", function: SUM)
+    "The date/time the work item was created."
+    created_at: DateTime!
+    "The date/time the work time was last updated."
+    updated_at: DateTime!
+}
+
+"Input for getting a work item."
+input WorkItemInput {
+    "Get work item by the internal work item id."
+    id: ID @eq
+}
+"Input for searching for a work item."
+input WorkItemSearchInput {
+    "Search by the work item's name Accepts SQL LIKE wildcards `%` and `_`."
+    name: String @where(operator: "like")
+    "Search by the work item's is open status."
+    is_open: Boolean @eq
+    "Search the work item's start date starting on the date/time provided."
+    start_date: DateRange @whereBetween
+    "Search the work item's end date stopping by the date/time provided."
+    end_date: DateRange @whereBetween
+    "Search by the project of the work item."
+    project_id: Int @eq
+}
+"Input for creating a work item."
+input WorkItemCreateInput {
+    "The work item project."
+    project: WorkItemProjectInput!
+    "The work item owner."
+    owner: WorkItemOwnerInput!
+    "The work item name."
+    name: String!
+    "Is the work item open."
+    is_open: Boolean
+    "The start date of the work order."
+    start_date: Date
+    "The end date of the work order."
+    end_date: Date
+    "Ticket data for the work order."
+    ticket_data: IpsDataCreateInput
+    "Assign users to the work item"
+    users: WorkItemCreateUserInput
+}
+"Input for assigning a work item to a project."
+input WorkItemProjectInput {
+    connect: ID!
+}
+"Input for assigning a work item to a user an the owner."
+input WorkItemOwnerInput {
+    connect: ID!
+}
+"Input for assigning a user as a work item user to a new work item."
+input WorkItemCreateUserInput {
+    connect: [ID!]!
+}
+"Input for updating a work item."
+input WorkItemUpdateInput {
+    "The internal work item id."
+    id: ID!
+    "The work item project."
+    project: WorkItemProjectInput
+    "The work item owner."
+    owner: WorkItemOwnerInput
+    "The work item name."
+    name: String
+    "Is the work item open."
+    is_open: Boolean
+    "The start date of the work order."
+    start_date: Date
+    "The end date of the work order."
+    end_date: Date
+    "Ticket data for the work order."
+    ticket_data: IpsDataUpdateInput
+    "Assign users to the work item"
+    users: WorkItemUpdateUserInput
+}
+"Input for updating user's assigned to a work item as a work item user."
+input WorkItemUpdateUserInput {
+    connect: [ID]
+    disconnect: [ID]
+}

@@ -1,0 +1,9 @@
+"A user role."
+type Role {
+    "The role id."
+    id: ID
+    "The role name."
+    name: String
+    "The role guard."
+    guard_name: String
+}

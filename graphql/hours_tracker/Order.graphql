@@ -1,0 +1,66 @@
+"An order."
+type Order {
+    "The internal order id."
+    id: ID!
+    "The order reference number."
+    reference_number: String
+    "The date/time the order was entered."
+    date: DateTime!
+    "The email contact for the order."
+    email: String!
+    "The number of hours the order was for."
+    hours: Float!
+    "The project the order is for."
+    project: Project @belongsTo
+    "The date/time the order was created."
+    created_at: DateTime!
+    "The date/time the order was last updated."
+    updated_at: DateTime!
+}
+"Input for getting an order."
+input OrderInput {
+    "Get the order by the internal order id."
+    id: ID @eq @rules(apply: ["prohibits:reference_number", "required_without:reference_number"])
+    "Get the order by the reference number."
+    reference_number: String @eq @rules(apply: ["prohibits:id", "required_without:id","App\\Rules\\ReferenceNumber"])
+}
+"Input for search for an order."
+input OrderSearchInput {
+    "Search by the contact email of the order. Accepts SQL LIKE wildcards `%` and `_`."
+    email: String @where(operator: "like")
+    "Search by the reference number of the order. Accepts SQL LIKE wildcards `%` and `_`."
+    reference_number: String @where(operator: "like")
+    "Search by project id."
+    project_id: ID @eq
+}
+"Input for creating an order."
+input OrderCreateInput {
+    "The order reference number."
+    reference_number: String
+    "The date/time the order was entered."
+    date: Date
+    "The email contact for the order."
+    email: String! @rules(apply: ["email:rfc"])
+    "The number of hours the order was for."
+    hours: Float!
+    "The project the order is for."
+    project: OrderProjectInput
+}
+"Input for updating an order."
+input OrderUpdateInput {
+    id: ID!
+    "The order reference number."
+    reference_number: String
+    "The date/time the order was entered."
+    date: Date
+    "The email contact for the order."
+    email: String @rules(apply: ["email:rfc"])
+    "The number of hours the order was for."
+    hours: Float
+    "The project the order is for."
+    project: OrderProjectInput
+}
+"Input for connecting an order to a project."
+input OrderProjectInput {
+    connect: ID!
+}

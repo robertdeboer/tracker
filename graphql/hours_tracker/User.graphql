@@ -1,0 +1,53 @@
+"A user."
+type User {
+    "The internal user id"
+    id: ID!
+    "The user's first name."
+    first_name: String!
+    "The user's last name."
+    last_name: String!
+    "The user's email."
+    email: String!
+    "The user's role."
+    roles: [Role]
+    "The date/time the user was created."
+    created_at: DateTime!
+    "The date/time the user was last updated."
+    updated_at: DateTime!
+}
+"Input for getting a single user."
+input UserInput {
+    "Get by the internal user id."
+    id: ID @eq @rules(apply: ["prohibits:email", "required_without:email"])
+    "Get by the user email."
+    email: String @eq @rules(apply: ["prohibits:id", "required_without:id"])
+}
+"Input for searching for a user."
+input UserSearchInput {
+    "The user's first name. Accepts SQL LIKE wildcards `%` and `_`."
+    first_name: String @where(operator: "like")
+    "The user's last name. Accepts SQL LIKE wildcards `%` and `_`."
+    last_name: String @where(operator: "like")
+    "The user's email. Accepts SQL LIKE wildcards `%` and `_`."
+    email: String @where(operator: "like")
+}
+"Input for creating a user."
+input UserCreateInput {
+    "The user's first name."
+    first_name: String! @rules(apply: ["App\\Rules\\UserName"])
+    "The user's last name."
+    last_name: String! @rules(apply: ["App\\Rules\\UserName"])
+    "The user's email."
+    email: String! @rules(apply: ["email:rfc"])
+}
+"Input for updating a user."
+input UserUpdateInput {
+    "The user's id."
+    id: ID!
+    "The user's first name."
+    first_name: String @rules(apply: ["App\\Rules\\UserName"])
+    "The user's last name."
+    last_name: String @rules(apply: ["App\\Rules\\UserName"])
+    "The user's email."
+    email: String @rules(apply: ["email:rfc"])
+}

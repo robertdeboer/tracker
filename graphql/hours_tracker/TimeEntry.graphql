@@ -1,0 +1,86 @@
+"A time entry."
+type TimeEntry {
+    "The internal time entry id."
+    id: ID!
+    "The work item the time entry is for."
+    work_item: WorkItem! @belongsTo
+    "The author of the time entry."
+    author: User! @belongsTo
+    "The number of hours the time entry is for."
+    hours: Float!
+    "The date/time the time entry is for."
+    date: DateTime!
+    "A note for the time entry."
+    note: String
+    "The date/time the time entry was created."
+    created_at: DateTime!
+    "The date/time the time entry was last updated."
+    updated_at: DateTime!
+}
+"Input for getting a time entry."
+input TimeEntryInput {
+    "The internal time entry id."
+    id: ID! @eq
+}
+"Input for searching for a time entry."
+input TimeEntrySearchInput {
+    "Search ont the time entry date."
+    date: String @where(operator: "like")
+    "Search on the time entry author."
+    author: UserSearchInput
+    "Search on the time entry work item."
+    work_item: WorkItemInput
+}
+"Input for creating a time entry."
+input TimeEntryCreateInput
+{
+    "The work time this time entry is for."
+    work_item: TimeEntryWorkItemInput!
+    "The author of the time entry."
+    author: TimeEntryCreateAuthorInput!
+    "The number of hours the time entry is for."
+    hours: Float!
+    "The date the time entry is for."
+    date: Date
+    "A note for the time entry."
+    note: String
+}
+"Input for assigning a time entry to a work item."
+input TimeEntryWorkItemInput {
+    connect: ID!
+}
+"Input for assigning the time entry author."
+input TimeEntryCreateAuthorInput {
+    connect: ID @authUser
+}
+"Input for assigning the time entry author."
+input TimeEntryUpdateAuthorInput {
+    connect: ID!
+}
+"Input for updating a time entry."
+input TimeEntryUpdateInput
+{
+    "The internal id of the time entry."
+    id: ID!
+    "The work time this time entry is for."
+    work_item: TimeEntryWorkItemInput
+    "The author of the time entry."
+    author: TimeEntryUpdateAuthorInput
+    "The number of hours the time entry is for."
+    hours: Float
+    "The date the time entry is for."
+    date: Date
+    "A note for the time entry."
+    note: String
+}
+"Input for getting time entries formatted for charts."
+input projectHoursChartedInput {
+    project_id: Int!
+    start: DateTime!
+    end: DateTime!
+}
+"The data returned for project hours charted."
+type projectHoursCharted {
+    labels: [String],
+    data: [Float]
+}

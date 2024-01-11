@@ -1,0 +1,101 @@
+"A project."
+type Project {
+    "The internal project id."
+    id: ID!
+    "The project name."
+    name: String!
+    "Is the project active."
+    is_active: Boolean!
+    "The project's customer"
+    customer: User! @belongsTo
+    "The project's project manager"
+    project_manager: User! @belongsTo
+    "Users that have access to this proejct that may not be assigned a role in the project."
+    users(
+        orderBy: _ @orderBy(columns: ["first_name","last_name","email","role_id"])
+        where: _ @whereConditions(columns: ["first_name","last_name","email","role_id"])
+        hasRoles: _ @whereHasConditions(columns: ["id","name"])
+    ): [User!] @hasManyThrough(type: PAGINATOR, defaultCount: 10)
+    "The project description."
+    description: String
+    "Any orders assigned to this project."
+    orders: [Order] @hasMany(defaultCount: 10)
+    "Any work items the project has."
+    work_items(where: _ @whereConditions(columns: ["start_date","end_date","is_open"])): [WorkItem] @hasMany(defaultCount: 10)
+    "The number of hours available to this project."
+    hours_ordered: Float @field(resolver: "App\\GraphQL\\Queries\\ProjectHoursOrdered")
+    "The number of hours used on this project."
+    hours_used: Float @field(resolver: "App\\GraphQL\\Queries\\ProjectHoursUsed")
+    "The date/time the project was created."
+    created_at: DateTime!
+    "The date/time the project was last updated."
+    updated_at: DateTime!
+}
+"Input for getting a project."
+input ProjectInput {
+    "Get by internal project id."
+    id: ID @eq @rules(apply: ["prohibits:name", "required_without:name"])
+    "Get by project name."
+    name: String @eq @rules(apply: ["prohibits:id", "required_without:id"])
+}
+"Input for searching for a project."
+input ProjectSearchInput {
+    "Search by product name. Accepts SQL LIKE wildcards `%` and `_`."
+    name: String @where(operator: "like")
+    "Search by whether the project is active."
+    is_active: Boolean @eq
+}
+"Input for creating a project."
+input ProjectCreateInput {
+    "Project name."
+    name: String! @rules(apply: ["App\\Rules\\ProjectName"])
+    "Is the project active."
+    is_active: Boolean
+    "A description for the project."
+    description: String
+    "The project's customer."
+    customer: ProjectCustomerInput!
+    "The project's project manager."
+    project_manager: ProjectProjectManagerInput!
+    "Create order(s) for the project."
+    orders: CreateProjectOrdersInput
+}
+"Input for orders for a project."
+input CreateProjectOrdersInput {
+    create: [OrderCreateInput]
+}
+"Input for setting a project's customer"
+input ProjectCustomerInput {
+    connect: ID!
+}
+"Input for setting a project's project manager"
+input ProjectProjectManagerInput {
+    connect: ID!
+}
+"Input for managing project users."
+input UpdateProjectUserInput {
+    connect: [ID!]
+    disconnect: [ID!]
+}
+"Input for updating a project."
+input ProjectUpdateInput {
+    "The internal project id."
+    id: ID!
+    "Project name."
+    name: String @rules(apply: ["App\\Rules\\ProjectName"])
+    "Is the project active."
+    is_active: Boolean
+    "A description for the project."
+    description: String
+    "The project's customer."
+    customer: ProjectCustomerInput
+    "The project's project manager."
+    project_manager: ProjectProjectManagerInput
+    "The project's users."
+    users: UpdateProjectUserInput
+}
+"Input for getting non project users."
+input nonProjectUsersInput {
+    "The project id"
+    id: ID!
+}

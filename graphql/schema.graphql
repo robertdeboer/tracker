@@ -1,0 +1,101 @@
+"A datetime string with format `Y-m-d H:i:s`, e.g. `2018-05-23 13:43:32`."
+scalar DateTime @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\DateTime")
+"A date string with format `Y-m-d`, e.g. `2011-05-23`."
+scalar Date @scalar(class: "Nuwave\\Lighthouse\\Schema\\Types\\Scalars\\Date")
+"A date range input."
+input DateRange {
+    "The start of the date range."
+    from: DateTime!
+    "The end of the date range."
+    to: DateTime!
+}
+"Indicates what fields are available at the top level of a query operation."
+type Query {
+    "Get the dasbhoard project list."
+    dashboard(in_active: Boolean! = false, with_hours: Boolean! = false): [DashboardProject] @field(resolver: "App\\GraphQL\\Queries\\Dashboard") @guard
+    "Get all user roles."
+    roles: [Role] @field(resolver: "App\\GraphQL\\Queries\\GetRoles") @guard
+    "Get a single user."
+    user(input: UserInput!): User @find @guard
+    "Search for a user"
+    users(
+        input: UserSearchInput,
+        orderBy: _ @orderBy(columns: ["first_name","last_name","email","role_id"])
+        hasRoles: _ @whereHasConditions(columns: ["id","name"])
+    ): [User] @paginate(defaultCount: 10) @guard
+    "Get all users who can be the owner of a work item."
+    availableWorkItemOwners: [User] @field(resolver: "App\\GraphQL\\Queries\\WorkItem\\AvailableOwners") @guard @can(ability: "Edit Time Entry")
+    "Get a single project."
+    project(input: ProjectInput!): Project @find # @guard @can(ability: "View Project")
+    "Search for a project."
+    projects(
+        input: ProjectSearchInput,
+        orderBy: _ @orderBy(columns: ["name","customer_id","project_manager_id","created_at"])
+    ): [Project] @paginate(defaultCount: 10) @guard @can(ability: "View Project")
+    "Get a single order."
+    order(input: OrderInput!): Order @find @guard
+    "Search for an order."
+    orders(
+        input: OrderSearchInput,
+        orderBy: _ @orderBy(columns: ["reference_number","project_id","date","hours","email","created_at"]),
+        hasProject: _ @whereHasConditions(columns: ["name", "is_active"])
+    ): [Order] @paginate(defaultCount: 10) @guard @can(ability: "View Orders")
+    "Get a single work item."
+    workItem(input: WorkItemInput!): WorkItem @find @guard @can(ability: "View Work Item")
+    "Search for a work item."
+    workItems(
+        input: WorkItemSearchInput
+        orderBy: _ @orderBy(columns: ["name","owner_id","start_date","end_date","is_open"])
+    ): [WorkItem] @paginate(defaultCount: 10) @guard @can(ability: "View Work Item")
+    "Get a single time entry."
+    timeEntry(input: TimeEntryInput!): TimeEntry @find @guard @can(ability: "View Time Entry")
+    "Search for a time entry."
+    timeEntries(
+        input: TimeEntrySearchInput,
+        hasWorkItem: _ @whereHasConditions(columns: ["id"],relation: "work_item")
+        orderBy: _ @orderBy(columns: ["id","author_id","hours","date"])
+    ): [TimeEntry] @paginate(defaultCount: 10) @guard @can(ability: "View Time Entry")
+    "Get the hours for a project, prepared for use in charts/graphs."
+    projectHoursCharted(input: projectHoursChartedInput!): projectHoursCharted! @guard @can(ability: "View Project" model: "User") @field(resolver: "App\\GraphQL\\Queries\\Project\\Chart\\GetHours")
+    "Get all users that are not assigned to a give project."
+    nonProjectUser(input: nonProjectUsersInput!): [User] @field(resolver: "App\\GraphQL\\Queries\\Project\\User\\NonProjectUsers")  @guard @can(ability: "Edit Project")
+}
+"Indicates what fields are available at the top level of a mutation operation."
+type Mutation {
+    "Create a user."
+    userCreate(input: UserCreateInput! @spread): User! @field(resolver: "App\\GraphQL\\Mutations\\User\\Create") @guard @can(ability: "Manage System")
+    "Update a user."
+    userUpdate(input: UserUpdateInput! @spread): User! @update @guard @can(ability: "Manage System")
+    "Delete a user."
+    userDelete(id: ID! @whereKey): User! @delete @guard @can(ability: "Manage System")
+    "Assign a role to a user."
+    assignRoleToUser(user_id: ID!, role_id: ID!): User! @field(resolver: "App\\GraphQL\\Mutations\\User\\AssignRole") @guard @can(ability: "Manage System")
+    "Create a project."
+    projectCreate(input: ProjectCreateInput! @spread): Project! @create @guard @can(ability: "Edit Project")
+    "Update a project."
+    projectUpdate(input: ProjectUpdateInput! @spread): Project! @update @guard @can(ability: "Edit Project")
+    "Delete a project."
+    projectDelete(id: ID! @whereKey): Project! @delete @guard @can(ability: "Edit Project")
+    "Create an order."
+    orderCreate(input: OrderCreateInput! @spread): Order! @create @guard @can(ability: "Edit Orders")
+    "Update an order."
+    orderUpdate(input: OrderUpdateInput! @spread): Order! @update @guard @can(ability: "Edit Orders")
+    "Delete an order."
+    orderDelete(id: ID! @whereKey): Order @delete @guard @can(ability: "Edit Orders")
+    "Create a work item."
+    workItemCreate(input: WorkItemCreateInput! @spread): WorkItem! @create @guard @can(ability: "Edit Work Item")
+    "Update a work item."
+    workItemUpdate(input: WorkItemUpdateInput! @spread): WorkItem! @update @guard @can(ability: "Edit Work Item")
+    "Delete a work item."
+    workItemDelete(id: ID! @whereKey): WorkItem! @delete @guard @can(ability: "Edit Work Item")
+    "Create a time entry."
+    timeEntryCreate(input: TimeEntryCreateInput! @spread): TimeEntry! @create @guard @can(ability: "Edit Time Entry")
+    "Update a time entry."
+    timeEntryUpdate(input: TimeEntryUpdateInput! @spread): TimeEntry! @update @guard @can(ability: "Edit Time Entry")
+    "Delete a time entry."
+    timeEntryDelete(id: ID! @whereKey): TimeEntry! @delete @guard @can(ability: "Edit Time Entry")
+    "Rebate a time entry."
+    timeEntryRebate(id: ID!): TimeEntry! @field(resolver: "App\\GraphQL\\Mutations\\TimeEntry\\RebateTimeEntry") @guard @can(ability: "Edit Time Entry")
+}
+
+#import hours_tracker/*.graphql

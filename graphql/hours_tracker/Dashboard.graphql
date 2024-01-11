@@ -1,0 +1,21 @@
+"A dashboard project."
+type DashboardProject {
+"The internal project id."
+id: ID!
+"The project name."
+name: String!
+"Is the project active."
+is_active: Boolean!
+"The project's customer"
+customer: User! @belongsTo
+"The project's project manager"
+project_manager: User! @belongsTo
+"The number of hours ordered."
+hours_ordered: Float
+"The number of hours used."
+hours_used: Float
+"The date/time the project was created."
+created_at: DateTime!
+"The date/time the project was last updated."
+updated_at: DateTime!
+}
