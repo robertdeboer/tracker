@@ -4,10 +4,10 @@
 This laravel application is designed to track time recorded against a project, with the project
 having a set amount of time available for use.
 
-The general break down of the application components:
+A general break down of the application components:
 1. A project represents a distinct group of work items, orders, and time entries.
 2. A project will have orders - these are the amount of hours that the project customer has authorized
-for use the project.
+for use with the project.
 3. A project will have one or more tasks, called work items.
 4. Each work item will have one or more time entries recorded against it.
 5. There are 5 types of users:
